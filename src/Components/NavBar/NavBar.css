@@ -1,0 +1,13 @@
+.nav-bar-container {
+    border: solid purple;
+    display: flex;
+    justify-content: center; 
+  }
+  
+  .nav-bar {
+    display: flex;
+    border: solid black;
+    width: 750px;
+    justify-content: space-around;
+  }
+  
