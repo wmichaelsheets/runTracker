@@ -1,8 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import { AppViews } from './WebSite/AppViews';
-import { Login } from '../auth/Login';
-import { Register } from '../auth/Register';
+import { Login } from './auth/Login';
+import { Register } from './auth/Register';
 import { Authorized } from './WebSite/Authorized';
 
 import React from 'react';
