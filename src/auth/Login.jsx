@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
-import { getUserByEmail } from '../src/Services/UserService';
+import { getUserByEmail } from '../Services/UserService';
 
 export const Login = () => {
-  const [email, set] = useState('GKnot@theknot.com');
+  const [email, set] = useState('jd@johndoe.com');
   const navigate = useNavigate();
 
   const handleLogin = (e) => {
@@ -15,13 +15,13 @@ export const Login = () => {
       if (foundUsers.length === 1) {
         const user = foundUsers[0];
         localStorage.setItem(
-          'flower_user',
+          'run_user',
           JSON.stringify({
             id: user.id,
           })
         );
 
-        navigate('/nurseries');
+        navigate('/runs');
       } else {
         window.alert('Invalid login');
       }
@@ -32,7 +32,7 @@ export const Login = () => {
     <main className="container-login">
       <section>
         <form className="form-login" onSubmit={handleLogin}>
-          <h1>Welcome to Flower shop</h1>
+          <h1>Welcome to Run Tracker</h1>
           <h2>Please sign in</h2>
           <fieldset>
             <div className="form-group">
