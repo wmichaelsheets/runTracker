@@ -24,13 +24,16 @@ export const AppViews = () => {
         path="/"
         element={
           <>
+            <NavBar />
             <Outlet />
           </>
         }
       >
-        <Route path="/runs"  element={<NurseryList />} />
+        {/* <Route path="/runs"  element={<NurseryList />} />
         <Route path="/shoes" element={<DistributorList />} />
         <Route path="/user"  element={<RetailersList /> }  />
+        <Route path="/runsList"  element={<RetailersList /> }  />
+        <Route path="/shoeList"  element={<RetailersList /> }  /> */}
       </Route>
     </Routes>
   );

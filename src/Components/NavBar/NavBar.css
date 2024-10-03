@@ -1,13 +1,15 @@
 .nav-bar-container {
-    border: solid purple;
+    border: solid black;
     display: flex;
     justify-content: center; 
-  }
+    background-color: white;
   
   .nav-bar {
     display: flex;
-    border: solid black;
     width: 750px;
     justify-content: space-around;
+    list-style-type: none;
   }
+
+
   
