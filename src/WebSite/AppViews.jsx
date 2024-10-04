@@ -1,6 +1,6 @@
 import { Outlet, Route, Routes } from 'react-router-dom';
 import { NavBar } from '../Components/NavBar/NavBar';
-// import { NurseryList } from '../Components/Nursery/NurseryList';
+import { RunStatsList } from '../Components/Runs/RunStatsList'
 // import { DistributorList } from '../Components/Distributor/DistributorList';
 // import { RetailersList } from '../Components/Retailers/RetailersList';
 import { Login } from '../auth/Login';
@@ -29,11 +29,11 @@ export const AppViews = () => {
           </>
         }
       >
-        {/* <Route path="/runs"  element={<NurseryList />} />
-        <Route path="/shoes" element={<DistributorList />} />
+        <Route path="/runs"  element={<RunStatsListList />} />
+        {/* <Route path="/shoes" element={<DistributorList />} />
         <Route path="/user"  element={<RetailersList /> }  />
         <Route path="/runsList"  element={<RetailersList /> }  />
-        <Route path="/shoeList"  element={<RetailersList /> }  /> */}
+        <Route path="/shoeList"  element={<RetailersList /> }  />  */}
       </Route>
     </Routes>
   );
