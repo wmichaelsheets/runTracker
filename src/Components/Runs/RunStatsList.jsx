@@ -1,54 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import RunStatsCard from './RunStatsCard';
+import { RunStatsCard } from './RunsStatsCard';
+import { getAllShoes } from '../../Services/ShoeService';
+import { getAllRunTypes } from '../../Services/RunTypeService';
+import { getAllRuns } from '../../Services/RunService';
+import { createRun } from '../../Services/RunService';
 
 
 export const RunStatsList = () => {
-  const [runs, setRuns] = useState([]);
-  const [shoes, setShoes] = useState([]);
-  const [runTypes, setRunTypes] = useState([]);
+  const [runs, setRuns] = useState([])
+  const [shoes, setShoes] = useState([])
+  const [runTypes, setRunTypes] = useState([])
 
   useEffect(() => {
-    // Fetch initial data (replace with your actual API calls)
     const fetchData = async () => {
       try {
-        const shoesResponse = await fetch('/api/shoes'); // Adjust path as needed
-        const shoesData = await shoesResponse.json();
-        setShoes(shoesData);
+        const shoesData = await getAllShoes()
+        setShoes(shoesData)
 
-        const runTypesResponse = await fetch('/api/runtypes'); // Adjust path as needed
-        const runTypesData = await runTypesResponse.json();
-        setRunTypes(runTypesData);
+        const runTypesData = await getAllRunTypes()
+        setRunTypes(runTypesData)
 
-        const runsResponse = await fetch('/api/runs'); // Adjust path as needed
-        const runsData = await runsResponse.json();
-        setRuns(runsData);
+        const runsData = await getAllRuns()
+        setRuns(runsData)
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error)
       }
-    };
-    fetchData();
-  }, []);
+    }
+    fetchData()
+  }, [])
 
   const handleAddRun = async (newRun) => {
     try {
-      const response = await fetch("/api/runs", { // Adjust path as needed
-        method: "POST",
+      const response = await createRun({
+        method: 'POST',
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(newRun),
-      });
-
+      })
+  
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
-      const addedRun = await response.json();
-      setRuns([...runs, addedRun]); // Update the state with the new run
+  
+      const addedRun = await response.json()
+      
+      if (Array.isArray(addedRun)) {
+        setRuns([...runs, ...addedRun])
+      } else {
+        setRuns([...runs, addedRun])
+      }
+  
+      console.log('Run successfully added:', addedRun)
     } catch (error) {
-      console.error("Error adding run:", error);
-      // Handle error appropriately (e.g., display an error message)
+      console.error("Error adding run:", error.message || error)
+      
     }
-  };
+  }
 
   return (
     <div>
@@ -66,4 +74,4 @@ export const RunStatsList = () => {
   );
 };
 
-export default RunStatsList;
+export default RunStatsList
