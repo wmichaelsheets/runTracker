@@ -62,14 +62,14 @@ export const RunStatsList = () => {
     <div>
       <h2>Running Stats</h2>
       <RunStatsCard shoes={shoes} runTypes={runTypes} onSubmit={handleAddRun} />
-      <h3>Your Runs:</h3>
+      {/* <h3>Your Runs:</h3>
       <ul>
         {runs.map((run) => (
           <li key={run.id}>
-            Date: {new Date(run.occur).toLocaleDateString()} | Distance: {run.distance} km | Duration: {run.duration} min | Shoe: {shoes.find(shoe => shoe.id === run.shoe_id)?.name} | Type: {runTypes.find(type => type.id === run.type_id)?.name} | Notes: {run.notes}
+            Date: {new Date(run.occur).toLocaleDateString()} | Distance: {run.distance} mi | Duration: {run.duration} min | Shoe: {shoes.find(shoe => shoe.id === run.shoe_id)?.name} | Type: {runTypes.find(type => type.id === run.type_id)?.name} | Notes: {run.notes}
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
   );
 };
