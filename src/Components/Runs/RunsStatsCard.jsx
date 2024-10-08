@@ -1,32 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { getAllShoes } from '../../Services/ShoeService';
+import { getAllRunTypes } from '../../Services/RunTypeService';
 
 export const RunStatsCard = ({ shoes, runTypes, onSubmit }) => {
-  const [date, setDate] = useState('');
-  const [distance, setDistance] = useState('');
-  const [duration, setDuration] = useState('');
-  const [selectedShoe, setSelectedShoe] = useState(shoes[0]); 
-  const [selectedRunType, setSelectedRunType] = useState(runTypes[0]); 
-  const [notes, setNotes] = useState('');
+  const [date, setDate] = useState('')
+  const [distance, setDistance] = useState('')
+  const [duration, setDuration] = useState('')
+  const [averagePace, setAveragePace] = useState('')
+  const [selectedShoe, setSelectedShoe] = useState(shoes[0] || { id: '', name: '' })
+  const [selectedRunType, setSelectedRunType] = useState(runTypes[0] || null) 
+  const [notes, setNotes] = useState('')
+
+  useEffect(() => {
+    if (runTypes.length > 0 && !selectedRunType) {
+      setSelectedRunType(runTypes[0])
+    }
+  }, [runTypes, selectedRunType])
+
+  useEffect(() => {
+    if (shoes.length > 0 && (!selectedShoe || !selectedShoe.id)) {
+      setSelectedShoe(shoes[0])
+    }
+    }, [shoes, selectedShoe])
+
+    useEffect(() => {
+    calculateAveragePace()
+  }, [distance, duration])
+
+  const calculateAveragePace = () => {
+    if (distance && duration) {
+      const distanceInMiles = parseFloat(distance)
+      const durationInMinutes = parseFloat(duration)
+      if (distanceInMiles > 0 && durationInMinutes > 0) {
+        const pace = durationInMinutes / distanceInMiles
+        setAveragePace(pace.toFixed(2))
+      } else {
+        setAveragePace('')
+      }
+    } else {
+      setAveragePace('')
+    }
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
+    if (!selectedRunType) return
+      
     const newRun = {
       date,
       distance: parseFloat(distance),
       duration: parseFloat(duration),
-      shoe_id: selectedShoe.id,
+      shoe_id: selectedShoe.id || '',
       type_id: selectedRunType.id,
       notes,
     };
-    onSubmit(newRun);
-    // Reset form after submission
-    setDate('');
-    setDistance('');
-    setDuration('');
-    setSelectedShoe(shoes[0]);
-    setSelectedRunType(runTypes[0]);
-    setNotes('');
-  };
+    onSubmit(newRun)
+    setDate('')
+    setDistance('')
+    setDuration('')
+    setSelectedShoe(shoes[0] || { id: '', name: '' })
+    setSelectedRunType(runTypes[0] || null)
+    setNotes('')
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -46,8 +81,20 @@ export const RunStatsCard = ({ shoes, runTypes, onSubmit }) => {
       </label>
       <br />
       <label>
+        Average Pace (min/mi):
+        <input type="text" value={averagePace} readOnly />
+      </label>
+      <br />
+      <label>
         Shoe:
-        <select value={selectedShoe} onChange={(e) => setSelectedShoe(shoes.find(shoe => shoe.id === parseInt(e.target.value, 10)))}>
+        <select 
+          value={selectedShoe ? selectedShoe.id : ''}
+          onChange={(e) => {
+            const selectedShoeId = parseInt(e.target.value, 10)
+            setSelectedShoe(shoes.find(shoe => shoe.id === selectedShoeId) || { id: '', name: '' })
+          }}
+        >
+          <option value="">Select a Shoe</option>
           {shoes.map((shoe) => (
             <option key={shoe.id} value={shoe.id}>{shoe.name}</option>
           ))}
@@ -61,7 +108,7 @@ export const RunStatsCard = ({ shoes, runTypes, onSubmit }) => {
             <input
               type="radio"
               value={type.id}
-              checked={selectedRunType.id === type.id}
+              checked={selectedRunType && selectedRunType.id === type.id}
               onChange={(e) => setSelectedRunType(type)}
               required
             />
@@ -80,4 +127,3 @@ export const RunStatsCard = ({ shoes, runTypes, onSubmit }) => {
   );
 };
 
-export default RunStatsCard;

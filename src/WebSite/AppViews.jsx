@@ -29,7 +29,7 @@ export const AppViews = () => {
           </>
         }
       >
-        <Route path="/runs"  element={<RunStatsListList />} />
+        <Route path="/runs"  element={<RunStatsList />} />
         {/* <Route path="/shoes" element={<DistributorList />} />
         <Route path="/user"  element={<RetailersList /> }  />
         <Route path="/runsList"  element={<RetailersList /> }  />
