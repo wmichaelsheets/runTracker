@@ -3,13 +3,13 @@ export const getUserByEmail = async (email) => {
     return await res.json();
   };
   
-  export const createUser = async (customer) => {
+  export const createUser = async () => {
     const res = await fetch('http://localhost:8088/users', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
           },
-          body: JSON.stringify(customer),
+          body: JSON.stringify(),
       });
       return await res.json();
   };
