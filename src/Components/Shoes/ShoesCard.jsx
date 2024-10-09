@@ -1,11 +1,32 @@
 import { useEffect, useState } from 'react' 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getAllRunsByShoe } from '../../Services/RunService';
+import { getAllShoes, deleteShoe } from '../../Services/ShoeService';
 
-export const ShoesCard = ({ shoe }) => {
+const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    const [year, month, day] = dateString.split('-');
+    return `${month}/${day}/${year}`;
+}
+
+export const ShoesCard = ({ shoe, onDelete }) => {
     const [totalDistance, setTotalDistance] = useState(0)
+    const [updatedShoe, setUpdatedShoe] = useState(shoe)
+    const navigate = useNavigate();
 
     useEffect(() => {
+        const fetchShoeData = async () => {
+            try {
+                const shoes = await getAllShoes()
+                const currentShoe = shoes.find(s => s.id === shoe.id)
+                if (currentShoe) {
+                    setUpdatedShoe(currentShoe)
+                }
+            } catch (error) {
+                console.error("Error fetching shoe data:", error)
+            }
+        }
+
         const calculateTotalDistance = async () => {
             try {
                 const runs = await getAllRunsByShoe(shoe.id)
@@ -17,23 +38,39 @@ export const ShoesCard = ({ shoe }) => {
             }
         }
     
+        fetchShoeData()
         calculateTotalDistance()
     }, [shoe.id])
 
-    const handleDelete = () => {
-        console.log("Delete shoe with id:", shoe.id)
+    const handleDelete = async () => {
+        
+        const isConfirmed = window.confirm(`Are you sure you want to delete ${updatedShoe.name}?`);
+        
+        if (isConfirmed) {
+            try {
+                await deleteShoe(shoe.id);
+                console.log("Shoe deleted successfully");
+                if (onDelete) {
+                    onDelete(shoe.id);
+                }
+                
+                navigate('/shoes');
+            } catch (error) {
+                console.error("Error deleting shoe:", error);
+            }
+        }
     }
 
     return (
         <div className="shoe-card">
-            <h2>{shoe.name}</h2>
-            <p> Date Added: {new Date(shoe.dateAdded).toLocaleDateString()}</p>
-            <p> Retired?: {shoe.isRetired ? 'Y' : 'N'}</p>
-            <p> Total Distance: {totalDistance.toFixed(2)} miles</p>
+            <h2>{updatedShoe.name}</h2>
+            <p>Date Added: {formatDate(updatedShoe.added)}</p>
+            <p>Retired: {updatedShoe.retired ? 'Y' : 'N'}</p>
+            <p>Total Distance: {totalDistance.toFixed(2)} miles</p>
             <button onClick={handleDelete}>Delete</button>
-            <Link to={`/edit-shoe/${shoe.id}`}>
+            <Link to={`/edit-shoe/${updatedShoe.id}`}>
                 <button>Edit</button>
-                </Link>
+            </Link>
         </div>
     )
 }    
