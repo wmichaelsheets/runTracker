@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { getAllShoes } from "../../Services/ShoeService"
 import ShoesCard from "./ShoesCard"
 
-const ShoesList = () => {
+export const ShoesList = () => {
     const [shoes, setShoes] = useState([])
 
     useEffect(() => {
