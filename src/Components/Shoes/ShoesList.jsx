@@ -13,12 +13,15 @@ export const ShoesList = () => {
         fetchShoes()
     }, [])
 
+    const handleShoeDelete = (deletedShoeId) => {
+        setShoes(shoes.filter(shoe => shoe.id !== deletedShoeId));
+    }
     return (
         <div>
             <h2>Shoes</h2>
             <div className="shoes-list">
                 {shoes.map(shoe => (
-                    <ShoesCard key={shoe.id} shoe={shoe} />
+                    <ShoesCard key={shoe.id} shoe={shoe} onDelete={handleShoeDelete}/>
                 ))}
             </div>
         </div>
