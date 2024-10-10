@@ -1,7 +1,21 @@
 export const getAllShoes = async () => {
-    const res = await fetch(`http://localhost:8088/shoes`);
-    return await res.json();
+    const res = await fetch(`http://localhost:8088/shoes`)
+    return await res.json()
   };
+
+  export const getShoeById = async (shoeId) => {
+    try {
+        const res = await fetch(`http://localhost:8088/shoes/${shoeId}`)
+        if (!res.ok) {
+            throw new Error('Failed to fetch shoe')
+        }
+        return await res.json()
+    } catch (error) {
+        console.error("Error fetching shoe:", error)
+        throw error
+    }
+ 
+  }
 
   export const deleteShoe = async (shoeId) => {
     const res = await fetch(`http://localhost:8088/shoes/${shoeId}`, {
@@ -11,7 +25,7 @@ export const getAllShoes = async () => {
         },
     });
     if (!res.ok) {
-        throw new Error('Failed to delete shoe');
+        throw new Error('Failed to delete shoe')
     }
     return true; 
 };
@@ -27,7 +41,7 @@ export const createShoe = async (shoeData) => {
     if (!res.ok) {
         throw new Error('Failed to create shoe');
     }
-    return await res.json();
+    return await res.json()
 };
 
 export const updateShoe = async (shoeId, shoeData) => {
@@ -37,9 +51,9 @@ export const updateShoe = async (shoeId, shoeData) => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(shoeData),
-    });
+    })
     if (!res.ok) {
         throw new Error('Failed to update shoe');
     }
-    return await res.json();
+    return await res.json()
 };
