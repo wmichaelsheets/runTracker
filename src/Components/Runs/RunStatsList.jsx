@@ -31,30 +31,24 @@ export const RunStatsList = () => {
 
   const handleAddRun = async (newRun) => {
     try {
-      const response = await createRun({
+      const response = await fetch('http://localhost:8088/runs', {
         method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(newRun),
       })
   
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error('Failed to add new run')
       }
   
       const addedRun = await response.json()
-      
-      if (Array.isArray(addedRun)) {
-        setRuns([...runs, ...addedRun])
-      } else {
-        setRuns([...runs, addedRun])
-      }
+      console.log('Run added successfully:', addedRun)
   
-      console.log('Run successfully added:', addedRun)
+      // Update your state or perform any other necessary actions
     } catch (error) {
-      console.error("Error adding run:", error.message || error)
-      
+      console.error('Error adding run:', error)
     }
   }
 
@@ -62,15 +56,7 @@ export const RunStatsList = () => {
     <div>
       <h2>Running Stats</h2>
       <RunStatsCard shoes={shoes} runTypes={runTypes} onSubmit={handleAddRun} />
-      {/* <h3>Your Runs:</h3>
-      <ul>
-        {runs.map((run) => (
-          <li key={run.id}>
-            Date: {new Date(run.occur).toLocaleDateString()} | Distance: {run.distance} mi | Duration: {run.duration} min | Shoe: {shoes.find(shoe => shoe.id === run.shoe_id)?.name} | Type: {runTypes.find(type => type.id === run.type_id)?.name} | Notes: {run.notes}
-          </li>
-        ))}
-      </ul> */}
-    </div>
+      </div>
   );
 };
 
