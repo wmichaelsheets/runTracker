@@ -68,7 +68,7 @@ export const ShoesCard = ({ shoe, onDelete }) => {
             <p>Retired: {updatedShoe.retired ? 'Y' : 'N'}</p>
             <p>Total Distance: {totalDistance.toFixed(2)} miles</p>
             <button onClick={handleDelete}>Delete</button>
-            <Link to={`/edit-shoe/${updatedShoe.id}`}>
+            <Link to={`/shoesEdit/`}>
                 <button>Edit</button>
             </Link>
         </div>
