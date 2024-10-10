@@ -1,35 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getShoeById, updateShoe } from '../../Services/ShoeService';
+import { getAllRunsByShoe } from '../../Services/RunService';
 
 export const ShoesEditForm = () => {
     const [shoe, setShoe] = useState({
-      name: '',
-      dateAdded: '',
-      retired: false,
-      notes: ''
+        id: '',
+        name: '',
+        added: '',
+        retired: false,
+        notes: '',
+        user_id: ''
     })
+    const [totalDistance, setTotalDistance] = useState(0)
     const { id } = useParams()
     const navigate = useNavigate()
 
     useEffect(() => {
-        const fetchShoe = async () => {
+        const fetchShoeAndRuns = async () => {
             try {
                 const shoeData = await getShoeById(id)
                 setShoe(shoeData)
+
+                const runs = await getAllRunsByShoe(id)
+                const total = runs.reduce((sum, run) => sum + parseFloat(run.distance), 0)
+                setTotalDistance(total)
             } catch (error) {
-                console.error("Error fetching shoe:", error)
-                // Handle error (e.g., show error message or redirect)
+                console.error("Error fetching shoe and runs:", error)
             }
         }
 
         if (id) {
-            fetchShoe()
+            fetchShoeAndRuns()
         }
     }, [id])
 
     const handleChange = (e) => {
-        const { name, value, type, checked } = e.target
+        const { name, value, type, checked } = e.target;
         setShoe(prevShoe => ({
             ...prevShoe,
             [name]: type === 'checkbox' ? checked : value
@@ -37,13 +44,12 @@ export const ShoesEditForm = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
         try {
             await updateShoe(shoe)
             navigate('/shoes')
         } catch (error) {
-            console.error("Error updating shoe:", error);
-            // Handle error (e.g., show error message)
+            console.error("Error updating shoe:", error)
         }
     }
 
@@ -67,12 +73,12 @@ export const ShoesEditForm = () => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="dateAdded">Date Added:</label>
+                    <label htmlFor="added">Date Added:</label>
                     <input
                         type="date"
-                        id="dateAdded"
-                        name="dateAdded"
-                        value={shoe.dateAdded}
+                        id="added"
+                        name="added"
+                        value={shoe.added}
                         onChange={handleChange}
                         required
                     />
@@ -95,6 +101,10 @@ export const ShoesEditForm = () => {
                         value={shoe.notes}
                         onChange={handleChange}
                     />
+                </div>
+                <div>
+                    <label>Total Distance:</label>
+                    <span>{totalDistance.toFixed(2)} miles</span>
                 </div>
                 <button type="submit">Save Changes</button>
                 <button type="button" onClick={() => navigate('/shoes')}>Cancel</button>
