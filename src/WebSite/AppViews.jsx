@@ -2,21 +2,22 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import { NavBar } from '../Components/NavBar/NavBar';
 import { RunStatsList } from '../Components/Runs/RunStatsList'
 import { ShoesList } from '../Components/Shoes/ShoesList';
-// import { RetailersList } from '../Components/Retailers/RetailersList';
+import { ShoesEditList } from '../Components/Shoes/ShoesEditList';
 import { Login } from '../auth/Login';
 import { Register } from '../auth/Register';
 import { useEffect, useState } from 'react';
 
 export const AppViews = () => {
-  const [currentUser, setCurrentUser] = useState({});
+  const [currentUser, setCurrentUser] = useState({})
 
 
   useEffect(() => {
-    const localRunUser = localStorage.getItem('run_user');
-    const runUserObject = JSON.parse(localRunUser);
-
-    setCurrentUser(runUserObject);
-  }, []);
+    const localRunUser = localStorage.getItem('run_user')
+    if (localRunUser) {
+      const runUserObject = JSON.parse(localRunUser)
+      setCurrentUser(runUserObject);
+    }
+  }, [])
 
     return (
     <Routes>
@@ -31,10 +32,12 @@ export const AppViews = () => {
       >
         <Route path="/runs"  element={<RunStatsList />} />
         <Route path="/shoes" element={<ShoesList />} />
-       {/* <Route path="/users" element={<RetailersList />} />} <Route path="/user"  element={<RetailersList /> }  />
-        <Route path="/runsList"  element={<RetailersList /> }  />
-        <Route path="/shoeList"  element={<RetailersList /> }  />  */}
+        
       </Route>
+      <Route path="/shoesEdit" element={<ShoesEditList />} />
+      <Route path="/login" element={<Login />} />
+       <Route path="/register" element={<Register />} />
     </Routes>
-  );
-};
+
+  )
+}
