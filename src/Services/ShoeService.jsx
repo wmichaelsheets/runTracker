@@ -44,8 +44,8 @@ export const createShoe = async (shoeData) => {
     return await res.json()
 };
 
-export const updateShoe = async (shoeId, shoeData) => {
-    const res = await fetch(`http://localhost:8088/shoes/${shoeId}`, {
+export const updateShoe = async (shoeData) => {
+    const res = await fetch(`http://localhost:8088/shoes/${shoeData.id}`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
