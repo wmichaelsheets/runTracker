@@ -2,7 +2,8 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import { NavBar } from '../Components/NavBar/NavBar';
 import { RunStatsList } from '../Components/Runs/RunStatsList'
 import { ShoesList } from '../Components/Shoes/ShoesList';
-import { ShoesEditList } from '../Components/Shoes/ShoesEditList';
+//import { ShoesEditList } from '../Components/Shoes/ShoesEditList';
+import {ShoesEditForm} from '../Components/Shoes/ShoesEditForm';
 import { Login } from '../auth/Login';
 import { Register } from '../auth/Register';
 import { useEffect, useState } from 'react';
@@ -34,9 +35,9 @@ export const AppViews = () => {
         <Route path="/shoes" element={<ShoesList />} />
         
       </Route>
-      <Route path="/shoesEdit" element={<ShoesEditList />} />
+      <Route path="/shoesEdit/:id" element={<ShoesEditForm />} />
       <Route path="/login" element={<Login />} />
-       <Route path="/register" element={<Register />} />
+      <Route path="/register" element={<Register />} />
     </Routes>
 
   )
