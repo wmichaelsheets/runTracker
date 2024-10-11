@@ -4,6 +4,7 @@ import { RunStatsList } from '../Components/Runs/RunStatsList'
 import { ShoesList } from '../Components/Shoes/ShoesList';
 import { UserEditCard } from '../Components/User/UserEditCard';
 import {ShoesEditForm} from '../Components/Shoes/ShoesEditForm';
+import { RunsByShoeList } from '../Components/Runs/RunsByShoeList';
 import { ShoeEntryForm } from '../Components/Shoes/ShoesEntryForm';
 import { Login } from '../auth/Login';
 import { Register } from '../auth/Register';
@@ -33,6 +34,7 @@ export const AppViews = () => {
         }
       >
         <Route path="/runs/enter"  element={<RunStatsList />} />
+        <Route path="/runs/by-shoe"  element={<RunsByShoeList />} />
         <Route path="/shoes/all" element={<ShoesList />} />
         <Route path="/user" element={<UserEditCard />} />
         <Route path="/shoes/enter" element={<ShoeEntryForm onSave={setCurrentUser} />} />
