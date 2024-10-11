@@ -44,17 +44,21 @@ export const RunStatsCard = ({ shoes, runTypes, onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!selectedRunType) return
+    if (!selectedRunType || !selectedShoe) return
       
     const newRun = {
       date,
       distance: parseFloat(distance),
       duration: parseFloat(duration),
-      shoe_id: selectedShoe.id || '',
-      type_id: selectedRunType.id,
+      shoe_id: parseInt(selectedShoe.id, 10),
+      type_id: parseInt(selectedRunType.id, 10),
       notes,
-    };
+    }
+  
+    console.log('Submitting new run:', newRun)
+  
     onSubmit(newRun)
+  
     setDate('')
     setDistance('')
     setDuration('')
