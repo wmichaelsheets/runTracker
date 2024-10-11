@@ -57,3 +57,16 @@ export const updateShoe = async (shoeData) => {
     }
     return await res.json()
 };
+
+export const getUserShoes = async (userId) => {
+    try {
+      const response = await fetch(`http://localhost:8088/shoes?userId=${userId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch user shoes');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching user shoes:', error);
+      throw error;
+    }
+  }

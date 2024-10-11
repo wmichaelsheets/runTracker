@@ -46,7 +46,6 @@ export const RunStatsList = () => {
       const addedRun = await response.json()
       console.log('Run added successfully:', addedRun)
   
-      // Update your state or perform any other necessary actions
     } catch (error) {
       console.error('Error adding run:', error)
     }
@@ -57,7 +56,7 @@ export const RunStatsList = () => {
       <h2>Running Stats</h2>
       <RunStatsCard shoes={shoes} runTypes={runTypes} onSubmit={handleAddRun} />
       </div>
-  );
-};
+  )
+}
 
 export default RunStatsList
