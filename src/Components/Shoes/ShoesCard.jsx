@@ -54,7 +54,7 @@ export const ShoesCard = ({ shoe, onDelete }) => {
                     onDelete(shoe.id);
                 }
                 
-                navigate('/shoes');
+                navigate('/shoes/all');
             } catch (error) {
                 console.error("Error deleting shoe:", error);
             }

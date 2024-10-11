@@ -1,61 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { RunStatsCard } from './RunsStatsCard';
-import { getAllShoes } from '../../Services/ShoeService';
+import { getUserShoes } from '../../Services/ShoeService';
 import { getAllRunTypes } from '../../Services/RunTypeService';
-import { getAllRuns } from '../../Services/RunService';
-import { createRun } from '../../Services/RunService';
-
+import { getAllRuns, createRun } from '../../Services/RunService';
+import { useCurrentUser } from '../User/CurrentUser'; 
 
 export const RunStatsList = () => {
   const [runs, setRuns] = useState([])
   const [shoes, setShoes] = useState([])
   const [runTypes, setRunTypes] = useState([])
+  const currentUser = useCurrentUser()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const shoesData = await getAllShoes()
-        setShoes(shoesData)
+        if (currentUser && currentUser.id) {
+          const shoesData = await getUserShoes(currentUser.id)
+          setShoes(shoesData)
 
-        const runTypesData = await getAllRunTypes()
-        setRunTypes(runTypesData)
+          const runTypesData = await getAllRunTypes()
+          setRunTypes(runTypesData)
 
-        const runsData = await getAllRuns()
-        setRuns(runsData)
+          const runsData = await getAllRuns()
+          setRuns(runsData)
+        }
       } catch (error) {
         console.error("Error fetching data:", error)
       }
     }
     fetchData()
-  }, [])
+  }, [currentUser])
 
   const handleAddRun = async (newRun) => {
     try {
-      const response = await fetch('http://localhost:8088/runs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newRun),
-      })
-  
-      if (!response.ok) {
-        throw new Error('Failed to add new run')
-      }
-  
-      const addedRun = await response.json()
+      const addedRun = await createRun(newRun)
       console.log('Run added successfully:', addedRun)
-  
+
+      setRuns([...runs, addedRun])
     } catch (error) {
       console.error('Error adding run:', error)
     }
   }
 
+  if (!currentUser) {
+    return <div>Please log in to view your running stats.</div>
+  }
+
   return (
     <div>
       <h2>Running Stats</h2>
-      <RunStatsCard shoes={shoes} runTypes={runTypes} onSubmit={handleAddRun} />
-      </div>
+      <RunStatsCard shoes={shoes} runTypes={runTypes} onRunAdded={handleAddRun} />
+    </div>
   )
 }
 

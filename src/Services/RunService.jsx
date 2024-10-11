@@ -13,15 +13,23 @@ export const getAllRuns = async () => {
   }
   
   export const createRun = async (runData) => {
-    const res = await fetch('http://localhost:8088/runs', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(runData),
-    });
-    if (!res.ok) {
-      throw new Error('Failed to create run');
+    try {
+      const response = await fetch('http://localhost:8088/runs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(runData),
+      })
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+  
+      const createdRun = await response.json()
+      return createdRun;
+    } catch (error) {
+      console.error('Error creating run:', error)
+      throw error
     }
-    return await res.json();
   }
