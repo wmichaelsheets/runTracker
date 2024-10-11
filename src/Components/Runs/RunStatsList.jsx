@@ -48,7 +48,7 @@ export const RunStatsList = () => {
 
   return (
     <div>
-      <h2>Running Stats</h2>
+      <h2>Enter A Run</h2>
       <RunStatsCard shoes={shoes} runTypes={runTypes} onRunAdded={handleAddRun} />
     </div>
   )
