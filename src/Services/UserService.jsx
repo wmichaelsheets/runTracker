@@ -4,9 +4,18 @@ export const getUserByEmail = async (email) => {
   };
 
   export const getUserById = async (id) => {
-    const res = await fetch(`http://localhost:8088/users?id=${id}`);
-    return await res.json();
-  };
+    try {
+      const response = await fetch(`http://localhost:8088/users/${id}`)
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+      const userData = await response.json() 
+      return userData
+    } catch (error) {
+      console.error("Error in getUserById:", error)
+      throw error
+    }
+  }
   
   export const createUser = async () => {
     const res = await fetch('http://localhost:8088/users', {

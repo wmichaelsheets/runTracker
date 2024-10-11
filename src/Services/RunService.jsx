@@ -4,12 +4,13 @@ export const getAllRuns = async () => {
   };
 
   export const getAllRunsByShoe = async (shoeId) => {
-    const res = await fetch(`http://localhost:8088/runs?shoe_id=${shoeId}`)
+    const res = await fetch(`http://localhost:8088/runs?shoe_id=${shoeId}&_expand=type`)
     if (!res.ok) {
-        throw new Error('Failed to fetch runs for shoe')
+      throw new Error('Failed to fetch runs for shoe')
     }
-    return await res.json()
-};
+    const data = await res.json()
+    return data
+  }
   
   export const createRun = async () => {
     const res = await fetch('http://localhost:8088/runs', {

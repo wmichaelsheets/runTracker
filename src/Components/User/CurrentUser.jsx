@@ -4,9 +4,13 @@ export const useCurrentUser = () => {
   const [currentUser, setCurrentUser] = useState(null)
 
   useEffect(() => {
-    const userJson = localStorage.getItem('run_user');
-    if (userJson) {
-      setCurrentUser(JSON.parse(userJson));
+    const localRunUser = localStorage.getItem('run_user')
+    if (localRunUser) {
+      const runUserObject = JSON.parse(localRunUser)
+      console.log("Retrieved user from localStorage:", runUserObject)
+      setCurrentUser(runUserObject)
+    } else {
+      console.log("No user found in localStorage")
     }
   }, [])
 

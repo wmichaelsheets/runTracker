@@ -20,7 +20,7 @@ export const NavBar = () => {
           </div>
         </li>
         <li>
-          <Link to="/user">Users</Link>
+          <Link to="/user">User</Link>
         </li>
       </ul>
     </div>
