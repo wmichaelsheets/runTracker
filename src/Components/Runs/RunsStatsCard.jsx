@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getAllShoes } from '../../Services/ShoeService';
-import { getAllRunTypes } from '../../Services/RunTypeService';
+import { createRun } from '../../Services/RunService';
+import { useCurrentUser } from '../User/CurrentUser'; // Ensure this path is correct
 
-export const RunStatsCard = ({ shoes, runTypes, onSubmit }) => {
+export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
+  const currentUser = useCurrentUser();
   const [date, setDate] = useState('')
   const [distance, setDistance] = useState('')
   const [duration, setDuration] = useState('')
@@ -21,9 +22,9 @@ export const RunStatsCard = ({ shoes, runTypes, onSubmit }) => {
     if (shoes.length > 0 && (!selectedShoe || !selectedShoe.id)) {
       setSelectedShoe(shoes[0])
     }
-    }, [shoes, selectedShoe])
+  }, [shoes, selectedShoe])
 
-    useEffect(() => {
+  useEffect(() => {
     calculateAveragePace()
   }, [distance, duration])
 
@@ -42,9 +43,9 @@ export const RunStatsCard = ({ shoes, runTypes, onSubmit }) => {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!selectedRunType || !selectedShoe) return
+    if (!selectedRunType || !selectedShoe || !currentUser) return
       
     const newRun = {
       date,
@@ -53,18 +54,24 @@ export const RunStatsCard = ({ shoes, runTypes, onSubmit }) => {
       shoe_id: parseInt(selectedShoe.id, 10),
       type_id: parseInt(selectedRunType.id, 10),
       notes,
+      user_id: currentUser.id
     }
   
-    console.log('Submitting new run:', newRun)
-  
-    onSubmit(newRun)
-  
-    setDate('')
-    setDistance('')
-    setDuration('')
-    setSelectedShoe(shoes[0] || { id: '', name: '' })
-    setSelectedRunType(runTypes[0] || null)
-    setNotes('')
+    try {
+      const createdRun = await createRun(newRun)
+      console.log('New run created:', createdRun)
+      onRunAdded(createdRun)
+      
+      // Reset form
+      setDate('')
+      setDistance('')
+      setDuration('')
+      setSelectedShoe(shoes[0] || { id: '', name: '' })
+      setSelectedRunType(runTypes[0] || null)
+      setNotes('')
+    } catch (error) {
+      console.error('Failed to create run:', error)
+    }
   }
 
   return (
@@ -128,6 +135,5 @@ export const RunStatsCard = ({ shoes, runTypes, onSubmit }) => {
       <br />
       <button type="submit">Add Run</button>
     </form>
-  );
-};
-
+  )
+}

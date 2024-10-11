@@ -1,97 +1,51 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.css';
-import './Register.css';
-import { createUser, getUserByEmail } from '../Services/UserService';
-import { NavBar } from '../Components/NavBar/NavBar';
+import { createUser } from '../Services/UserService';
 
-export const Register = (props) => {
-  const [user, setUser] = useState({
-    email: '',
-    name: '',
-    dob: ''
-  });
-  let navigate = useNavigate()
+export const Register = () => {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const navigate = useNavigate()
 
-  const registerNewUser = () => {
-    createUser(user).then((createdUser) => {
-      if (createdUser.hasOwnProperty('id')) {
-        localStorage.setItem(
-          'run_user',
-          JSON.stringify({
-            id: createdUser.id,
-          })
-        )
-
-        navigate('/runs')
+  const registerNewUser = async (event) => {
+    event.preventDefault()
+    try {
+      const newUser = await createUser({ name, email })
+      if (newUser) {
+        localStorage.setItem('run_user', JSON.stringify(newUser))
+        navigate('/')
       }
-    })
-  }
-
-  const handleRegister = (e) => {
-    e.preventDefault()
-    getUserByEmail(user.email).then((response) => {
-      if (response.length > 0) {
-        // Duplicate email. No good.
-        window.alert('Account with that email address already exists')
-      } else {
-        // Good email, create user.
-        registerNewUser()
-      }
-    })
-  }
-
-  const updateUser = (evt) => {
-    const copy = { ...user }
-    copy[evt.target.id] = evt.target.value;
-    setUser(copy)
+    } catch (error) {
+      console.error('Registration failed:', error)
+    }
   }
 
   return (
-    <div className="register-container">
-      <NavBar />
-      <div className="register-content">
-        <form className="form-login" onSubmit={handleRegister}>
-          <h1>Run Tracker</h1>
-          <h2>Please Register</h2>
-          <fieldset>
-            <div className="form-group">
-              <input
-                onChange={updateUser}
-                type="text"
-                id="name"
-                className="form-control"
-                placeholder="Enter your name"
-                required
-                autoFocus
-              />
-            </div>
-          </fieldset>
-          <fieldset>
-            <div className="form-group">
-              <input
-                onChange={updateUser}
-                type="email"
-                id="email"
-                className="form-control"
-                placeholder="Email address"
-                required
-              />
-            </div>
-          </fieldset>
-          
-          <fieldset>
-            <div className="form-group"></div>
-          </fieldset>
-          <fieldset>
-            <div className="form-group">
-              <button className="login-btn btn-info" type="submit">
-                Register
-              </button>
-            </div>
-          </fieldset>
-        </form>
-      </div>
-    </div>
+    <form onSubmit={registerNewUser}>
+      <h1>Please Register</h1>
+      <fieldset>
+        <label htmlFor="name">Name:</label>
+        <input
+          type="text"
+          id="name"
+          value={name}
+          onChange={(evt) => setName(evt.target.value)}
+          required
+        />
+      </fieldset>
+      <fieldset>
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          value={email}
+          onChange={(evt) => setEmail(evt.target.value)}
+          required
+        />
+      </fieldset>
+      <fieldset>
+        <button type="submit">Register</button>
+      </fieldset>
+    </form>
   )
 }
