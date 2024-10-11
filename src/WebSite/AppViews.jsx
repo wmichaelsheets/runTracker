@@ -2,8 +2,9 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import { NavBar } from '../Components/NavBar/NavBar';
 import { RunStatsList } from '../Components/Runs/RunStatsList'
 import { ShoesList } from '../Components/Shoes/ShoesList';
-//import { ShoesEditList } from '../Components/Shoes/ShoesEditList';
+import { UserEditCard } from '../Components/User/UserEditCard';
 import {ShoesEditForm} from '../Components/Shoes/ShoesEditForm';
+import { ShoeEntryForm } from '../Components/Shoes/ShoesEntryForm';
 import { Login } from '../auth/Login';
 import { Register } from '../auth/Register';
 import { useEffect, useState } from 'react';
@@ -31,9 +32,10 @@ export const AppViews = () => {
           </>
         }
       >
-        <Route path="/runs"  element={<RunStatsList />} />
-        <Route path="/shoes" element={<ShoesList />} />
-        
+        <Route path="/runs/enter"  element={<RunStatsList />} />
+        <Route path="/shoes/all" element={<ShoesList />} />
+        <Route path="/user" element={<UserEditCard />} />
+        <Route path="/shoes/enter" element={<ShoeEntryForm onSave={setCurrentUser} />} />
       </Route>
       <Route path="/shoesEdit/:id" element={<ShoesEditForm />} />
       <Route path="/login" element={<Login />} />

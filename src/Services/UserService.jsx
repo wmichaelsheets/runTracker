@@ -2,6 +2,11 @@ export const getUserByEmail = async (email) => {
     const res = await fetch(`http://localhost:8088/users?email=${email}`);
     return await res.json();
   };
+
+  export const getUserById = async (id) => {
+    const res = await fetch(`http://localhost:8088/users?id=${id}`);
+    return await res.json();
+  };
   
   export const createUser = async () => {
     const res = await fetch('http://localhost:8088/users', {
