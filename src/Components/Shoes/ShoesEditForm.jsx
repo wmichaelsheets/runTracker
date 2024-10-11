@@ -47,7 +47,7 @@ export const ShoesEditForm = () => {
         e.preventDefault()
         try {
             await updateShoe(shoe)
-            navigate('/shoes')
+            navigate('/shoes/all')
         } catch (error) {
             console.error("Error updating shoe:", error)
         }
@@ -107,7 +107,7 @@ export const ShoesEditForm = () => {
                     <span>{totalDistance.toFixed(2)} miles</span>
                 </div>
                 <button type="submit">Save Changes</button>
-                <button type="button" onClick={() => navigate('/shoes')}>Cancel</button>
+                <button type="button" onClick={() => navigate('/shoes/all')}>Cancel</button>
             </form>
         </div>
     )

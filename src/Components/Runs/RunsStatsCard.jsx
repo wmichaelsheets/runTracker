@@ -62,7 +62,7 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
       console.log('New run created:', createdRun)
       onRunAdded(createdRun)
       
-      // Reset form
+ 
       setDate('')
       setDistance('')
       setDuration('')

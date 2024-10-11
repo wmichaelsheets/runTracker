@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react"
 import { getUserShoes } from "../../Services/ShoeService"
 import ShoesCard from "./ShoesCard"
 import { useNavigate } from "react-router-dom"
-import { useCurrentUser } from '../User/CurrentUser' // Ensure this path is correct
+import { useCurrentUser } from '../User/CurrentUser' 
+import { ShoesEditCard } from "./ShoesEditCard"
 
 export const ShoesList = () => {
     const navigate = useNavigate()
     const [shoes, setShoes] = useState([])
+    const [editingShoe, setEditingShoe] = useState(null)
     const currentUser = useCurrentUser()
 
     useEffect(() => {
@@ -38,9 +40,7 @@ export const ShoesList = () => {
     return (
         <div>
             <h2>My Shoes</h2>
-            {shoes.length === 0 ? (
-                <p>You haven't added any shoes yet.</p>
-            ) : (
+            {currentUser ? (
                 <div className="shoes-list">
                     {shoes.map(shoe => (
                         <ShoesCard 
@@ -51,7 +51,10 @@ export const ShoesList = () => {
                         />
                     ))}
                 </div>
+            ) : (
+                <p>Please log in to view your shoes.</p>
             )}
+           
         </div>
     )
 }
