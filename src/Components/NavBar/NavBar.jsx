@@ -20,7 +20,7 @@ export const NavBar = () => {
           </div>
         </li>
         <li>
-          <Link to="/register">Users</Link>
+          <Link to="/user">Users</Link>
         </li>
       </ul>
     </div>
