@@ -1,44 +1,26 @@
-import React, { useState, useEffect } from 'react';
 import RunsByShoeCard from './RunsByShoeCard';
-import { getAllRunsByShoe } from '../../Services/RunService';
+import React, { useState, useEffect } from 'react';
 import { getAllShoes } from '../../Services/ShoeService';
-import { getAllRunTypes } from '../../Services/RunTypeService';
 import { useCurrentUser } from '../User/CurrentUser';
 
 export const RunsByShoeList = () => {
   const [shoes, setShoes] = useState([])
-  const [selectedShoe, setSelectedShoe] = useState("")
+  const [selectedShoe, setSelectedShoe] = useState('')
   const [runs, setRuns] = useState([])
-  const [runTypes, setRunTypes] = useState([])
   const currentUser = useCurrentUser()
 
   useEffect(() => {
     const fetchShoes = async () => {
-      if (currentUser && currentUser.id) {
+      if (currentUser) {
         try {
-          const allShoes = await getAllShoes();
-          const userShoes = allShoes.filter(shoe => shoe.user_id === currentUser.id);
-          setShoes(userShoes)
+          const shoesData = await getAllShoes(currentUser.id)
+          setShoes(shoesData)
         } catch (error) {
           console.error('Error fetching shoes:', error)
         }
       }
     }
     fetchShoes()
-
-    const fetchRunTypes = async () => {
-      try {
-        const types = await getAllRunTypes()
-        const typesMap = types.reduce((acc, type) => {
-          acc[type.id] = type.name
-          return acc
-        }, {});
-        setRunTypes(typesMap)
-      } catch (error) {
-        console.error('Error fetching run types:', error)
-      }
-    }
-    fetchRunTypes()
   }, [currentUser])
 
   const handleShoeChange = async (event) => {
@@ -47,20 +29,22 @@ export const RunsByShoeList = () => {
 
     if (selectedShoeId) {
       try {
-        const runsData = await getAllRunsByShoe(selectedShoeId);
-        console.log("Fetched runs:", runsData);
-        setRuns(runsData);
+        const response = await fetch(`http://localhost:8088/runs?shoe_id=${selectedShoeId}`)
+        if (!response.ok) {
+          throw new Error('Failed to fetch runs')
+        }
+        const data = await response.json()
+        setRuns(data)
       } catch (error) {
         console.error('Error fetching runs:', error)
+        setRuns([])
       }
     } else {
       setRuns([])
     }
   }
 
-  if (!currentUser) {
-    return <div>Loading user data...</div>;
-  }
+  const selectedShoeObject = shoes.find((shoe) => shoe.id === parseInt(selectedShoe))
 
   return (
     <div>
@@ -70,12 +54,8 @@ export const RunsByShoeList = () => {
           <option key={shoe.id} value={shoe.id}>{shoe.name}</option>
         ))}
       </select>
-      {selectedShoe && (
-        <RunsByShoeCard 
-          shoe={shoes.find((shoe) => shoe.id === parseInt(selectedShoe))} 
-          runs={runs} 
-          runTypes={runTypes}
-        />
+      {selectedShoe && selectedShoeObject && (
+        <RunsByShoeCard shoe={selectedShoeObject} runs={runs} />
       )}
     </div>
   )

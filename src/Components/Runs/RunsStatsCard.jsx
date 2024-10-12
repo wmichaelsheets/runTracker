@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createRun } from '../../Services/RunService';
-import { useCurrentUser } from '../User/CurrentUser'; // Ensure this path is correct
+import { useCurrentUser } from '../User/CurrentUser'; 
 
 export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
   const currentUser = useCurrentUser();

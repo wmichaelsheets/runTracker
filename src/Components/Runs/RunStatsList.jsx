@@ -33,14 +33,13 @@ export const RunStatsList = () => {
 
   const handleAddRun = async (newRun) => {
     try {
-      const addedRun = await createRun(newRun)
-      console.log('Run added successfully:', addedRun)
-
-      setRuns([...runs, addedRun])
+      const addedRun = await createRun(newRun);
+      console.log('Run added successfully:', addedRun);
+      setRuns([...runs, addedRun]);
     } catch (error) {
-      console.error('Error adding run:', error)
+      console.error('Error adding run:', error);
     }
-  }
+  };
 
   if (!currentUser) {
     return <div>Please log in to view your running stats.</div>
