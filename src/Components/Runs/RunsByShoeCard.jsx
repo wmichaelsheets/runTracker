@@ -1,33 +1,34 @@
 import React from 'react';
 
-export const RunsByShoeCard = ({ shoe, runs, runTypes }) => {
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A'
-    const date = new Date(dateString)
-    if (isNaN(date.getTime())) {
-      return dateString
-    }
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return date.toLocaleDateString(undefined, options)
-  };
+const RunsByShoeCard = ({ shoe, runs }) => {
+  if (!shoe || !runs) {
+    return <div>No data available</div>
+  }
+
+  const totalDistance = runs.reduce((sum, run) => sum + run.distance, 0)
+  const totalDuration = runs.reduce((sum, run) => sum + run.duration, 0)
+
+  const averagePace = totalDistance > 0 
+    ? (totalDuration / totalDistance).toFixed(2) 
+    : 'N/A'
 
   return (
-    <div>
-      <h2>Runs for {shoe.name}</h2>
-      {runs.length > 0 ? (
-        <ul>
-          {runs.map((run) => (
-            <li key={run.id}>
-              <span>Date: {formatDate(run.occur)}</span>
-              <span>Distance: {run.distance} miles</span>
-              <span>Duration: {run.duration} minutes</span>
-              <span>Run Type: {runTypes[run.type_id] || 'Unknown'}</span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No runs found for this shoe.</p>
-      )}
+    <div className="shoe-card">
+      <h3>{shoe.name}</h3>
+      <p>Total Runs: {runs.length}</p>
+      <p>Total Distance: {totalDistance.toFixed(2)} miles</p>
+      <p>Total Duration: {totalDuration.toFixed(2)} minutes</p>
+      <p>Average Pace: {averagePace} min/mile</p>
+      <h4>Runs:</h4>
+      <ul>
+        {runs.map((run) => (
+          <li key={run.id}>
+            Date: {new Date(run.occur).toLocaleDateString()} - 
+            Distance: {run.distance.toFixed(2)} miles - 
+            Duration: {run.duration.toFixed(2)} minutes
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

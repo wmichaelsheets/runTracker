@@ -42,7 +42,11 @@ export const ShoesEditList = () => {
       const updatedShoe = await updateShoe(editedShoe)
       setShoes(shoes.map((s) => (s.id === updatedShoe.id ? updatedShoe : s)))
     } else {
-      const newShoe = await createShoe(editedShoe)
+      const newShoeData = {
+        ...editedShoe,
+        user_id: currentUser.id 
+      }
+      const newShoe = await createShoe(newShoeData) 
       setShoes([...shoes, newShoe])
     }
     setSelectedShoe(editedShoe)
@@ -92,7 +96,6 @@ export const ShoesEditList = () => {
         <ShoeEntryForm
           onSave={handleSave}
           onCancel={handleCancel}
-          currentUserId={currentUser.Id}
         />
       )}
     </div>

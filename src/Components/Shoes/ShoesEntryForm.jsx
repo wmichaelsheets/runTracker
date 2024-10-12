@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { createShoe } from '../../Services/ShoeService';
+import { useCurrentUser } from '../User/CurrentUser';
 
-export const ShoeEntryForm = ({ onSave, onCancel, currentUserId }) => {
+export const ShoeEntryForm = ({ onSave, onCancel }) => {
+  const currentUser = useCurrentUser()
   const [shoe, setShoe] = useState({
     name: '',
     added: new Date().toISOString().split('T')[0], 
     notes: '',
     retired: false,
-    user_id: currentUserId
+    user_id: currentUser ? currentUser.id : null
   })
 
   const handleChange = (e) => {
@@ -21,10 +23,14 @@ export const ShoeEntryForm = ({ onSave, onCancel, currentUserId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
+      if (!currentUser) {
+        console.error('No user is logged in')
+        return
+      }
       const shoeToSubmit = {
         ...shoe,
         retired: false,
-        user_id: currentUserId
+        user_id: currentUser.id
       }
       const newShoe = await createShoe(shoeToSubmit)
       onSave(newShoe)
@@ -32,6 +38,10 @@ export const ShoeEntryForm = ({ onSave, onCancel, currentUserId }) => {
       console.error('Error creating shoe:', error)
      
     }
+  }
+
+  if (!currentUser) {
+    return <div>Please log in to add a shoe.</div>
   }
 
   return (
