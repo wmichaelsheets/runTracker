@@ -4,7 +4,7 @@ import { useCurrentUser } from '../User/CurrentUser';
 
 export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
   const currentUser = useCurrentUser();
-  const [date, setDate] = useState('')
+  const [occur, setOccur] = useState('')
   const [distance, setDistance] = useState('')
   const [duration, setDuration] = useState('')
   const [averagePace, setAveragePace] = useState('')
@@ -48,7 +48,7 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
     if (!selectedRunType || !selectedShoe || !currentUser) return
       
     const newRun = {
-      date,
+      occur,
       distance: parseFloat(distance),
       duration: parseFloat(duration),
       shoe_id: parseInt(selectedShoe.id, 10),
@@ -63,7 +63,7 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
       onRunAdded(createdRun)
       
  
-      setDate('')
+      setOccur('')
       setDistance('')
       setDuration('')
       setSelectedShoe(shoes[0] || { id: '', name: '' })
@@ -78,7 +78,7 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
     <form onSubmit={handleSubmit}>
       <label>
         Date:
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+        <input type="date" value={occur} onChange={(e) => setOccur(e.target.value)} required />
       </label>
       <br />
       <label>
@@ -99,7 +99,7 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
       <label>
         Shoe:
         <select 
-          value={selectedShoe ? selectedShoe.id : ''}
+          value={selectedShoe.id}
           onChange={(e) => {
             const selectedShoeId = parseInt(e.target.value, 10)
             setSelectedShoe(shoes.find(shoe => shoe.id === selectedShoeId) || { id: '', name: '' })

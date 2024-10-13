@@ -4,13 +4,15 @@ import { useCurrentUser } from '../User/CurrentUser';
 
 export const ShoeEntryForm = ({ onSave, onCancel }) => {
   const currentUser = useCurrentUser()
-  const [shoe, setShoe] = useState({
+  const initialShoeState = {
     name: '',
     added: new Date().toISOString().split('T')[0], 
     notes: '',
     retired: false,
     user_id: currentUser ? currentUser.id : null
-  })
+  }
+
+  const [shoe, setShoe] = useState(initialShoeState)
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,9 +36,20 @@ export const ShoeEntryForm = ({ onSave, onCancel }) => {
       }
       const newShoe = await createShoe(shoeToSubmit)
       onSave(newShoe)
+      
+      
+      setShoe(initialShoeState)
     } catch (error) {
       console.error('Error creating shoe:', error)
-     
+    }
+  }
+
+  const handleCancel = () => {
+    
+    setShoe(initialShoeState)
+    
+    if (onCancel) {
+      onCancel()
     }
   }
 
@@ -79,7 +92,7 @@ export const ShoeEntryForm = ({ onSave, onCancel }) => {
         />
       </div>
       <button type="submit">Save</button>
-      <button type="button" onClick={onCancel}>Cancel</button>
+      <button type="button" onClick={handleCancel}>Cancel</button>
     </form>
   )
 }
