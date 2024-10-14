@@ -11,6 +11,7 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
   const [selectedShoe, setSelectedShoe] = useState(shoes[0] || { id: '', name: '' })
   const [selectedRunType, setSelectedRunType] = useState(runTypes[0] || null) 
   const [notes, setNotes] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (runTypes.length > 0 && !selectedRunType) {
@@ -44,9 +45,12 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    if (!selectedRunType || !selectedShoe || !currentUser) return
-      
+    e.preventDefault();
+    if (!selectedRunType || !selectedShoe || !currentUser || isSubmitting) return;
+    
+    setIsSubmitting(true);
+    
+
     const newRun = {
       occur,
       distance: parseFloat(distance),
@@ -55,24 +59,31 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
       type_id: parseInt(selectedRunType.id, 10),
       notes,
       user_id: currentUser.id
-    }
+    };
   
     try {
-      const createdRun = await createRun(newRun)
-      console.log('New run created:', createdRun)
-      onRunAdded(createdRun)
       
- 
-      setOccur('')
-      setDistance('')
-      setDuration('')
-      setSelectedShoe(shoes[0] || { id: '', name: '' })
-      setSelectedRunType(runTypes[0] || null)
-      setNotes('')
+      const createdRun = await createRun(newRun);
+      
+
+      
+      onRunAdded(createdRun);
+      
+      
+      setOccur('');
+      setDistance('');
+      setDuration('');
+      setSelectedShoe(shoes[0] || { id: '', name: '' });
+      setSelectedRunType(runTypes[0] || null);
+      setNotes('');
+      
+      
     } catch (error) {
-      console.error('Failed to create run:', error)
+      console.error('Failed to create run:', error);
+    } finally {
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -133,7 +144,9 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
         <textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
       </label>
       <br />
-      <button type="submit">Add Run</button>
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Adding Run...' : 'Add Run'}
+      </button>
     </form>
   )
 }

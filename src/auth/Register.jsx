@@ -5,12 +5,22 @@ import { createUser } from '../Services/UserService';
 export const Register = () => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [dob, setDob] = useState('')
   const navigate = useNavigate()
 
   const registerNewUser = async (event) => {
     event.preventDefault()
     try {
-      const newUser = await createUser({ name, email })
+      const now = new Date()
+      const created_at = now.toISOString().slice(0, 19).replace('T', ' ')
+      
+      const newUser = await createUser({ 
+        name, 
+        email, 
+        dob,
+        created_at 
+      })
+      
       if (newUser) {
         localStorage.setItem('run_user', JSON.stringify(newUser))
         navigate('/runs/enter')
@@ -41,6 +51,17 @@ export const Register = () => {
           value={email}
           onChange={(evt) => setEmail(evt.target.value)}
           required
+        />
+      </fieldset>
+      <fieldset>
+        <label htmlFor="dob">Date of Birth:</label>
+        <input
+          type="date"
+          id="dob"
+          value={dob}
+          onChange={(evt) => setDob(evt.target.value)}
+          required
+          max={new Date().toISOString().split('T')[0]}
         />
       </fieldset>
       <fieldset>

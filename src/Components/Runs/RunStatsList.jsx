@@ -31,15 +31,10 @@ export const RunStatsList = () => {
     fetchData()
   }, [currentUser])
 
-  const handleAddRun = async (newRun) => {
-    try {
-      const addedRun = await createRun(newRun);
-      console.log('Run added successfully:', addedRun);
-      setRuns([...runs, addedRun]);
-    } catch (error) {
-      console.error('Error adding run:', error);
-    }
-  };
+  const handleAddRun = (addedRun) => {
+    
+    setRuns(prevRuns => [...prevRuns, addedRun])
+  }
 
   if (!currentUser) {
     return <div>Please log in to view your running stats.</div>

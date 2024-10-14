@@ -26,6 +26,8 @@ export const getUserByEmail = async (email) => {
       body: JSON.stringify({
         name: userData.name,
         email: userData.email,
+        dob: userData.dob,
+        created_at: userData.created_at,
       }),
     })
     if (!res.ok) {
