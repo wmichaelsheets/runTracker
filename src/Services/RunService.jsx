@@ -13,22 +13,16 @@ export const getAllRuns = async () => {
   }
   
   export const createRun = async (newRun) => {
-    try {
-      const res = await fetch('http://localhost:8088/runs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newRun),
-      })
+    const runWithoutId = { ...newRun };
+    delete runWithoutId.id
   
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`)
-      }
+    const res = await fetch('http://localhost:8088/runs', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(runWithoutId),
+    })
   
-      return await res.json();
-    } catch (error) {
-      console.error('Error creating run:', error)
-      throw error
-    }
+    return await res.json();
   }
