@@ -18,3 +18,31 @@
   strong {
     font-weight: bold;
   }
+
+  .run-type-container {
+    margin-bottom: 15px;
+  }
+  
+  .run-type-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .run-type-options {
+    display: flex;
+    
+  }
+  
+  .run-type-option {
+    flex-basis: 50%;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .run-type-option input[type="radio"] {
+    margin-right: 5px;
+  }
+
+  

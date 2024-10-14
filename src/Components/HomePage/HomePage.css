@@ -1,0 +1,20 @@
+.home-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .logo {
+    max-width: 200px;
+    margin-bottom: 20px;
+  }
+  
+  .instructions {
+    text-align: left;
+    margin-top: 20px;
+  }
+  
+  .instructions ol {
+    padding-left: 20px;
+  }

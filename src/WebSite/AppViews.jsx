@@ -9,6 +9,7 @@ import { ShoeEntryForm } from '../Components/Shoes/ShoesEntryForm';
 import { Login } from '../auth/Login';
 import { Register } from '../auth/Register';
 import { useEffect, useState } from 'react';
+import { HomePage } from '../Components/HomePage/HomePage';
 
 export const AppViews = () => {
   const [currentUser, setCurrentUser] = useState({})
@@ -33,6 +34,7 @@ export const AppViews = () => {
           </>
         }
       >
+        <Route index element={<HomePage />} />
         <Route path="/runs/enter"  element={<RunStatsList />} />
         <Route path="/runs/by-shoe"  element={<RunsByShoeList />} />
         <Route path="/shoes/all" element={<ShoesList />} />
