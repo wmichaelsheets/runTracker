@@ -21,7 +21,7 @@ export const Login = () => {
           })
         );
 
-        navigate('/runs/enter');
+        navigate('/');
       } else {
         window.alert('Invalid login');
       }

@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { createRun } from '../../Services/RunService';
-import { useCurrentUser } from '../User/CurrentUser'; 
+import { useCurrentUser } from '../User/CurrentUser';
+import './RunsStatsCard.css';
 
 export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
-  const currentUser = useCurrentUser();
+  const currentUser = useCurrentUser()
   const [occur, setOccur] = useState('')
   const [distance, setDistance] = useState('')
   const [duration, setDuration] = useState('')
   const [averagePace, setAveragePace] = useState('')
   const [selectedShoe, setSelectedShoe] = useState(shoes[0] || { id: '', name: '' })
-  const [selectedRunType, setSelectedRunType] = useState(runTypes[0] || null) 
+  const [selectedRunType, setSelectedRunType] = useState(runTypes[0] || null)
   const [notes, setNotes] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
     if (runTypes.length > 0 && !selectedRunType) {
@@ -45,11 +46,10 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedRunType || !selectedShoe || !currentUser || isSubmitting) return;
+    e.preventDefault()
+    if (!selectedRunType || !selectedShoe || !currentUser) return
     
-    setIsSubmitting(true);
-    
+    setIsSubmitting(true)
 
     const newRun = {
       occur,
@@ -59,60 +59,76 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
       type_id: parseInt(selectedRunType.id, 10),
       notes,
       user_id: currentUser.id
-    };
-  
-    try {
-      
-      const createdRun = await createRun(newRun);
-      
-
-      
-      onRunAdded(createdRun);
-      
-      
-      setOccur('');
-      setDistance('');
-      setDuration('');
-      setSelectedShoe(shoes[0] || { id: '', name: '' });
-      setSelectedRunType(runTypes[0] || null);
-      setNotes('');
-      
-      
-    } catch (error) {
-      console.error('Failed to create run:', error);
-    } finally {
-      setIsSubmitting(false);
     }
-  };
+
+    try {
+      const createdRun = await createRun(newRun)
+      console.log('New run created:', createdRun)
+      onRunAdded(createdRun)
+
+      setOccur('')
+      setDistance('')
+      setDuration('')
+      setSelectedShoe(shoes[0] || { id: '', name: '' })
+      setSelectedRunType(runTypes[0] || null)
+      setNotes('')
+    } catch (error) {
+      console.error('Failed to create run:', error)
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Date:
-        <input type="date" value={occur} onChange={(e) => setOccur(e.target.value)} required />
-      </label>
-      <br />
-      <label>
-        Distance (mi):
-        <input type="number" step="0.1" value={distance} onChange={(e) => setDistance(e.target.value)} required />
-      </label>
-      <br />
-      <label>
-        Duration (min):
-        <input type="number" step="0.1" value={duration} onChange={(e) => setDuration(e.target.value)} required />
-      </label>
-      <br />
-      <label>
-        Average Pace (min/mi):
-        <input type="text" value={averagePace} readOnly />
-      </label>
-      <br />
-      <label>
-        Shoe:
+    <form onSubmit={handleSubmit} className="run-stats-form">
+      <div className="form-group">
+        <label htmlFor="date">Date:</label>
+        <input 
+          id="date"
+          type="date" 
+          value={occur} 
+          onChange={(e) => setOccur(e.target.value)} 
+          required 
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="distance">Distance (mi):</label>
+        <input 
+          id="distance"
+          type="number" 
+          step="0.1" 
+          value={distance} 
+          onChange={(e) => setDistance(e.target.value)} 
+          required 
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="duration">Duration (min):</label>
+        <input 
+          id="duration"
+          type="number" 
+          step="0.1" 
+          value={duration} 
+          onChange={(e) => setDuration(e.target.value)} 
+          required 
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="averagePace">Average Pace (min/mi):</label>
+        <input 
+          id="averagePace"
+          type="text" 
+          value={averagePace} 
+          readOnly 
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="shoe">Shoe:</label>
         <select 
+          id="shoe"
           value={selectedShoe.id}
           onChange={(e) => {
-            const selectedShoeId = parseInt(e.target.value, 10)
+            const selectedShoeId = parseInt(e.target.value, 10);
             setSelectedShoe(shoes.find(shoe => shoe.id === selectedShoeId) || { id: '', name: '' })
           }}
         >
@@ -121,29 +137,32 @@ export const RunStatsCard = ({ shoes, runTypes, onRunAdded }) => {
             <option key={shoe.id} value={shoe.id}>{shoe.name}</option>
           ))}
         </select>
-      </label>
-      <br />
-      <label>
-        Run Type:
-        {runTypes.map((type) => (
-          <label key={type.id}>
-            <input
-              type="radio"
-              value={type.id}
-              checked={selectedRunType && selectedRunType.id === type.id}
-              onChange={(e) => setSelectedRunType(type)}
-              required
-            />
-            {type.name}
-          </label>
-        ))}
-      </label>
-      <br />
-      <label>
-        Notes:
-        <textarea value={notes} onChange={(e) => setNotes(e.target.value)} />
-      </label>
-      <br />
+      </div>
+      <div className="form-group run-type-container">
+        <label className="run-type-label">Run Type:</label>
+        <div className="run-type-options">
+          {runTypes.map((type) => (
+            <label key={type.id} className="run-type-option">
+              <input
+                type="radio"
+                value={type.id}
+                checked={selectedRunType && selectedRunType.id === type.id}
+                onChange={() => setSelectedRunType(type)}
+                required
+              />
+              {type.name}
+            </label>
+          ))}
+        </div>
+      </div>
+      <div className="form-group">
+        <label htmlFor="notes">Notes:</label>
+        <textarea 
+          id="notes"
+          value={notes} 
+          onChange={(e) => setNotes(e.target.value)} 
+        />
+      </div>
       <button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Adding Run...' : 'Add Run'}
       </button>

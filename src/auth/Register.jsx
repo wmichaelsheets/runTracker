@@ -23,7 +23,7 @@ export const Register = () => {
       
       if (newUser) {
         localStorage.setItem('run_user', JSON.stringify(newUser))
-        navigate('/runs/enter')
+        navigate('/')
       }
     } catch (error) {
       console.error('Registration failed:', error)

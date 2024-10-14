@@ -46,7 +46,7 @@ export const RunStatsList = () => {
       {shoes.length > 0 && runTypes.length > 0 ? (
       <RunStatsCard shoes={shoes} runTypes={runTypes} onRunAdded={handleAddRun} />
       ) : (
-      <div>Loading shoes and run types...</div>
+      <div>Please enter a shoe before creating a run...</div>
       )}
     </div>
   )
