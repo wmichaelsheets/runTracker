@@ -10,6 +10,7 @@ export const NavBar = () => {
           <div className="dropdown-content">
             <Link to="/runs/enter">Enter a Run</Link>
             <Link to="/runs/by-shoe">View Runs by Shoe</Link>
+            <Link to="/runs/all">All Runs</Link>
           </div>
         </li>
         <li className="dropdown">

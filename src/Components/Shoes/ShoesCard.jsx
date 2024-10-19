@@ -1,78 +1,74 @@
-import { useEffect, useState } from 'react' 
-import { Link, useNavigate } from "react-router-dom";
-import { getAllRunsByShoe } from '../../Services/RunService';
-import { getAllShoes, deleteShoe } from '../../Services/ShoeService';
+import React, { useState, useEffect } from 'react';
+import { formatDate } from '../utils/dateUtils';
 
-const formatDate = (dateString) => {
-    if (!dateString) return 'N/A';
-    const [year, month, day] = dateString.split('-');
-    return `${month}/${day}/${year}`;
-}
+export const ShoesCard = ({ shoe, onDelete, onEdit }) => {
+  const [runs, setRuns] = useState([])
+  const [expandedShoeId, setExpandedShoeId] = useState(null)
 
-export const ShoesCard = ({ shoe, onDelete }) => {
-    const [totalDistance, setTotalDistance] = useState(0)
-    const [updatedShoe, setUpdatedShoe] = useState(shoe)
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const fetchShoeData = async () => {
-            try {
-                const shoes = await getAllShoes()
-                const currentShoe = shoes.find(s => s.id === shoe.id)
-                if (currentShoe) {
-                    setUpdatedShoe(currentShoe)
-                }
-            } catch (error) {
-                console.error("Error fetching shoe data:", error)
-            }
+  useEffect(() => {
+    const fetchRuns = async () => {
+      try {
+        const response = await fetch(`http://localhost:8088/runs?shoe_id=${shoe.id}`)
+        if (!response.ok) {
+          throw new Error('Failed to fetch runs')
         }
-
-        const calculateTotalDistance = async () => {
-            try {
-                const runs = await getAllRunsByShoe(shoe.id)
-                const total = runs.reduce((sum, run) => sum + run.distance, 0)
-                setTotalDistance(total)
-            } catch (error) {
-                console.error("Error calculating total distance:", error)
-                setTotalDistance(0)
-            }
-        }
-    
-        fetchShoeData()
-        calculateTotalDistance()
-    }, [shoe.id])
-
-    const handleDelete = async () => {
-        
-        const isConfirmed = window.confirm(`Are you sure you want to delete ${updatedShoe.name}?`);
-        
-        if (isConfirmed) {
-            try {
-                await deleteShoe(shoe.id);
-                console.log("Shoe deleted successfully");
-                if (onDelete) {
-                    onDelete(shoe.id);
-                }
-                
-                navigate('/shoes/all');
-            } catch (error) {
-                console.error("Error deleting shoe:", error);
-            }
-        }
+        const data = await response.json()
+        setRuns(data)
+      } catch (error) {
+        console.error('Error fetching runs:', error)
+      }
     }
 
-    return (
-        <div className="shoe-card">
-            <h2>{updatedShoe.name}</h2>
-            <p>Date Added: {formatDate(updatedShoe.added)}</p>
-            <p>Retired: {updatedShoe.retired ? 'Y' : 'N'}</p>
-            <p>Total Distance: {totalDistance.toFixed(2)} miles</p>
-            <button onClick={handleDelete}>Delete</button>
-            <Link to={`/shoesEdit/${updatedShoe.id}`}>
-                <button>Edit</button>
-            </Link>
-        </div>
-    )
-}    
+    fetchRuns()
+  }, [shoe.id])
 
-export default ShoesCard
+  const handleDelete = () => {
+    
+      onDelete(shoe.id)
+    
+  }
+
+  const handleEdit = () => {
+    onEdit(shoe.id);
+  }
+
+  const toggleExpand = () => {
+    setExpandedShoeId(expandedShoeId === shoe.id ? null : shoe.id)
+  }
+
+  const totalDistance = runs.reduce((sum, run) => sum + (Number(run.distance) || 0), 0)
+  const totalDuration = runs.reduce((sum, run) => sum + (Number(run.duration) || 0), 0)
+  const averagePace = totalDistance > 0 ? (totalDuration / totalDistance) : 0
+
+  return (
+    <div className="shoe-card">
+      <h3>{shoe.name}</h3>
+      <p>Date Added: {formatDate(shoe.added)}</p>
+      <p>Total Runs: {runs.length}</p>
+      <p>Total Distance: {totalDistance.toFixed(2)} miles</p>
+      <p>Total Duration: {totalDuration.toFixed(2)} minutes</p>
+      <p>Average Pace: {averagePace.toFixed(2)} min/mile</p>
+      <p>Retired: {shoe.retired ? 'Yes' : 'No'}</p>
+      <p>Notes: {shoe.notes ? shoe.notes : 'No notes available'}</p>
+      <button onClick={handleEdit}>Edit</button>
+      <button onClick={handleDelete}>Delete</button>
+      <button onClick={toggleExpand}>
+        {expandedShoeId === shoe.id ? 'Hide Runs' : 'Show Runs'}
+      </button>
+      {expandedShoeId === shoe.id && (
+        <div>
+          <h4>Runs:</h4>
+          <ul>
+            {runs.map(run => (
+              <li key={run.id}>
+                Date: {formatDate(run.occur)}, 
+                Distance: {Number(run.distance).toFixed(2)} miles, 
+                Duration: {Number(run.duration).toFixed(2)} minutes
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
+}

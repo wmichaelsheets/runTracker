@@ -26,3 +26,19 @@ export const getAllRuns = async () => {
   
     return await res.json();
   }
+
+  export const updateRun = async (updatedRun) => {
+  const response = await fetch(`http://localhost:8088/runs/${updatedRun.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updatedRun),
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to update run')
+  }
+
+  return await response.json()
+}

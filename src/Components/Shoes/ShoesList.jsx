@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from "react" 
-import { getUserShoes } from "../../Services/ShoeService"
-import ShoesCard from "./ShoesCard"
-import { useNavigate } from "react-router-dom"
+import { getUserShoes, deleteShoe } from "../../Services/ShoeService"
+import { ShoesCard } from "./ShoesCard"
 import { useCurrentUser } from '../User/CurrentUser' 
-import { ShoesEditCard } from "./ShoesEditCard"
+import { ShoesEditForm } from './ShoesEditForm'
 
 export const ShoesList = () => {
-    const navigate = useNavigate()
     const [shoes, setShoes] = useState([])
-    const [editingShoe, setEditingShoe] = useState(null)
     const currentUser = useCurrentUser()
+    const [editingShoe, setEditingShoe] = useState(null)
 
     useEffect(() => {
         const fetchUserShoes = async () => {
@@ -25,12 +23,33 @@ export const ShoesList = () => {
         fetchUserShoes()
     }, [currentUser])
 
-    const handleShoeDelete = (deletedShoeId) => {
-        setShoes(shoes.filter(shoe => shoe.id !== deletedShoeId));
+    const handleShoeDelete = async (shoeId) => {
+        const isConfirmed = window.confirm("Are you sure you want to delete this shoe?");
+        if (isConfirmed) {
+            try {
+                await deleteShoe(shoeId);
+                setShoes(shoes.filter(shoe => shoe.id !== shoeId));
+            } catch (error) {
+                console.error("Failed to delete shoe:", error);
+            }
+        }
     }
 
     const handleEditClick = (shoe) => {
-        navigate(`/shoes/edit/${shoe.id}`)
+        setEditingShoe(shoe)
+    }
+
+    const handleEditClose = () => {
+        setEditingShoe(null);
+
+        if (currentUser && currentUser.id) {
+            getUserShoes(currentUser.id).then(setShoes);
+        }
+    }
+
+    const handleEditSave = (updatedShoe) => {
+        setShoes(shoes.map(shoe => shoe.id === updatedShoe.id ? updatedShoe : shoe));
+        setEditingShoe(null);
     }
 
     if (!currentUser) {
@@ -40,21 +59,27 @@ export const ShoesList = () => {
     return (
         <div>
             <h2>My Shoes</h2>
-            {currentUser ? (
-                <div className="shoes-list">
-                    {shoes.map(shoe => (
-                        <ShoesCard 
-                            key={shoe.id} 
-                            shoe={shoe} 
-                            onDelete={handleShoeDelete}
-                            onEdit={() => handleEditClick(shoe)}
+            <div className="shoes-list">
+                {shoes.map(shoe => (
+                    <ShoesCard 
+                        key={shoe.id} 
+                        shoe={shoe} 
+                        onDelete={() => handleShoeDelete(shoe.id)}
+                        onEdit={() => handleEditClick(shoe)}
+                    />
+                ))}
+            </div>
+            {editingShoe && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <ShoesEditForm 
+                            shoe={editingShoe} 
+                            onClose={handleEditClose} 
+                            onSave={handleEditSave}
                         />
-                    ))}
+                    </div>
                 </div>
-            ) : (
-                <p>Please log in to view your shoes.</p>
             )}
-           
         </div>
     )
 }

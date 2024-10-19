@@ -1,9 +1,9 @@
 export const getAllShoes = async (userId) => {
-    const res = await fetch(`http://localhost:8088/shoes?user_id=${userId}`);
+    const res = await fetch(`http://localhost:8088/shoes?user_id=${userId}`)
     if (!res.ok) {
-      throw new Error('Failed to fetch shoes');
+      throw new Error('Failed to fetch shoes')
     }
-    return await res.json();
+    return await res.json()
   };
 
   export const getShoeById = async (shoeId) => {
@@ -26,12 +26,12 @@ export const getAllShoes = async (userId) => {
         headers: {
             'Content-Type': 'application/json',
         },
-    });
+    })
     if (!res.ok) {
         throw new Error('Failed to delete shoe')
     }
-    return true; 
-};
+    return true
+}
 
 export const createShoe = async (shoeData) => {
     const res = await fetch(`http://localhost:8088/shoes`, {
@@ -40,12 +40,12 @@ export const createShoe = async (shoeData) => {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify(shoeData),
-    });
+    })
     if (!res.ok) {
-        throw new Error('Failed to create shoe');
+        throw new Error('Failed to create shoe')
     }
     return await res.json()
-};
+}
 
 export const updateShoe = async (shoeData) => {
     const res = await fetch(`http://localhost:8088/shoes/${shoeData.id}`, {
@@ -56,20 +56,20 @@ export const updateShoe = async (shoeData) => {
         body: JSON.stringify(shoeData),
     })
     if (!res.ok) {
-        throw new Error('Failed to update shoe');
+        throw new Error('Failed to update shoe')
     }
     return await res.json()
 };
 
 export const getUserShoes = async (userId) => {
     try {
-      const response = await fetch(`http://localhost:8088/shoes?user_id=${userId}`);
+      const response = await fetch(`http://localhost:8088/shoes?user_id=${userId}`)
       if (!response.ok) {
-        throw new Error('Failed to fetch user shoes');
+        throw new Error('Failed to fetch user shoes')
       }
-      return await response.json();
+      return await response.json()
     } catch (error) {
-      console.error('Error fetching user shoes:', error);
-      throw error;
+      console.error('Error fetching user shoes:', error)
+      throw error
     }
   }

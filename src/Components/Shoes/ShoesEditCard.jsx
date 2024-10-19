@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 
 export const ShoesEditCard = ({ shoe, onSave, onCancel }) => {
-  const [editedShoe, setEditedShoe] = useState(shoe);
+  const [editedShoe, setEditedShoe] = useState(shoe)
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditedShoe({ ...editedShoe, [name]: value });
-  };
+    const { name, value } = e.target
+    setEditedShoe({ ...editedShoe, [name]: value })
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    onSave(editedShoe);
-  };
+    e.preventDefault()
+    onSave(editedShoe)
+  }
 
   return (
     <form onSubmit={handleSubmit}>
@@ -50,7 +50,7 @@ export const ShoesEditCard = ({ shoe, onSave, onCancel }) => {
       <button type="submit">Save</button>
       <button type="button" onClick={onCancel}>Cancel</button>
     </form>
-  );
-};
+  )
+}
 
-export default ShoesEditCard;
+export default ShoesEditCard
