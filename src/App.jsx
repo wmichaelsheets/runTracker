@@ -4,9 +4,7 @@ import { AppViews } from './WebSite/AppViews';
 import { Login } from './auth/Login';
 import { Register } from './auth/Register';
 import { Authorized } from './WebSite/Authorized';
-
 import React from 'react';
-import './App.css';
 
 function App() {
   return (
@@ -23,8 +21,8 @@ function App() {
         }
       />
     </Routes>
-  );
+  )
 }
 
-export default App;
+export default App
 

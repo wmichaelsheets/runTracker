@@ -1,7 +1,15 @@
-import RunsByShoeCard from './RunsByShoeCard';
-import React, { useState, useEffect } from 'react';
 import { getAllShoes } from '../../Services/ShoeService';
+import React, { useState, useEffect } from 'react';
 import { useCurrentUser } from '../User/CurrentUser';
+import RunsByShoeCard from './RunsByShoeCard';
+
+
+const formatDate = (dateString) => {
+  if (!dateString) return 'N/A'
+  const date = new Date(dateString)
+  if (isNaN(date.getTime())) return 'Invalid Date'
+  return new Date(date.getTime() + date.getTimezoneOffset() * 60000).toLocaleDateString()
+};
 
 export const RunsByShoeList = () => {
   const [shoes, setShoes] = useState([])
@@ -34,7 +42,12 @@ export const RunsByShoeList = () => {
           throw new Error('Failed to fetch runs')
         }
         const data = await response.json()
-        setRuns(data)
+
+        const formattedData = data.map(run => ({
+          ...run,
+          occur: formatDate(run.occur)
+        }))
+        setRuns(formattedData)
       } catch (error) {
         console.error('Error fetching runs:', error)
         setRuns([])

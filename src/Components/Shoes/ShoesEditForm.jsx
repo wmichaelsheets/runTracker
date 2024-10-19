@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getShoeById, updateShoe } from '../../Services/ShoeService';
 import { getAllRunsByShoe } from '../../Services/RunService';
+import { getShoeById, updateShoe } from '../../Services/ShoeService';
 
-export const ShoesEditForm = () => {
+export const ShoesEditForm = ({ shoe: initialShoe, onClose, onSave }) => {
     const [shoe, setShoe] = useState({
         id: '',
         name: '',
@@ -13,16 +12,18 @@ export const ShoesEditForm = () => {
         user_id: ''
     })
     const [totalDistance, setTotalDistance] = useState(0)
-    const { id } = useParams()
-    const navigate = useNavigate()
 
     useEffect(() => {
         const fetchShoeAndRuns = async () => {
             try {
-                const shoeData = await getShoeById(id)
-                setShoe(shoeData)
+                // Use the initialShoe data passed as a prop
+                const shoeData = initialShoe;
+                console.log("Received shoe data:", shoeData);
+                // Ensure the date is in YYYY-MM-DD format
+                const formattedDate = new Date(shoeData.added).toISOString().split('T')[0]
+                setShoe({...shoeData, added: formattedDate})
 
-                const runs = await getAllRunsByShoe(id)
+                const runs = await getAllRunsByShoe(shoeData.id)
                 const total = runs.reduce((sum, run) => sum + parseFloat(run.distance), 0)
                 setTotalDistance(total)
             } catch (error) {
@@ -30,10 +31,8 @@ export const ShoesEditForm = () => {
             }
         }
 
-        if (id) {
-            fetchShoeAndRuns()
-        }
-    }, [id])
+        fetchShoeAndRuns()
+    }, [initialShoe])
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -46,15 +45,13 @@ export const ShoesEditForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         try {
-            await updateShoe(shoe)
-            navigate('/shoes/all')
+            // Ensure the date is in the correct format before sending to the server
+            const submittedShoe = {...shoe, added: new Date(shoe.added).toISOString().split('T')[0]}
+            const updatedShoe = await updateShoe(submittedShoe)
+            onSave(updatedShoe)
         } catch (error) {
             console.error("Error updating shoe:", error)
         }
-    }
-
-    if (!shoe.id) {
-        return <div>Loading...</div>
     }
 
     return (
@@ -103,14 +100,11 @@ export const ShoesEditForm = () => {
                     />
                 </div>
                 <div>
-                    <label>Total Distance:</label>
-                    <span>{totalDistance.toFixed(2)} miles</span>
+                    <p>Total Distance: {totalDistance.toFixed(2)} miles</p>
                 </div>
                 <button type="submit">Save Changes</button>
-                <button type="button" onClick={() => navigate('/shoes/all')}>Cancel</button>
+                <button type="button" onClick={onClose}>Cancel</button>
             </form>
         </div>
     )
 }
-
-export default ShoesEditForm;

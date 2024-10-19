@@ -1,0 +1,52 @@
+.all-runs-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .all-runs-card h3 {
+    margin: 0;
+    color: #333;
+    flex-basis: 20%;
+  }
+  
+  .run-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+  }
+  
+  .run-details p {
+    margin: 0 8px;
+    color: #666;
+    flex-basis: 50%;
+    text-align: left;
+  }
+
+  @media (max-width: 768px) {
+    .all-runs-card {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .run-details {
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .run-details p {
+      margin: 4px 0;
+      text-align: left;
+    }
+  }

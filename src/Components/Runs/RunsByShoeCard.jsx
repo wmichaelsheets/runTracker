@@ -1,5 +1,3 @@
-import React from 'react';
-
 const RunsByShoeCard = ({ shoe, runs }) => {
   if (!shoe || !runs) {
     return <div>No data available</div>
@@ -23,7 +21,7 @@ const RunsByShoeCard = ({ shoe, runs }) => {
       <ul>
         {runs.map((run) => (
           <li key={run.id}>
-            Date: {new Date(run.occur).toLocaleDateString()} - 
+            Date: {run.occur} - 
             Distance: {run.distance.toFixed(2)} miles - 
             Duration: {run.duration.toFixed(2)} minutes
           </li>
